@@ -6,6 +6,7 @@ public class Room {
     private String beskrivelse;
     private String forbindelser;
     private Room modeast, modsouth, modnorth, modwest;
+    private ArrayList<Items> items = new ArrayList<>();
 
 
     public String getNavn() {
@@ -58,6 +59,21 @@ public class Room {
         return modwest;
     }
 
+    public ArrayList<Items> getItems() {
+        return items;
+    }
 
+    //Adder items til room
+    public void addItems(Items i){
+        items.add(i);
+
+    }
+    public String printItems(){
+        String itemsList = "";
+        for (Items r : items){
+            itemsList =itemsList + "\n" + r.getName() + r.getBeskrivelse();
+        }
+        return itemsList;
+    }
 }
 
