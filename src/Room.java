@@ -1,9 +1,12 @@
+import java.util.ArrayList;
+
 public class Room {
 
     private String navn;
     private String beskrivelse;
     private String forbindelser;
     private Room modeast, modsouth, modnorth, modwest;
+
 
     public String getNavn() {
         return navn;
@@ -54,5 +57,7 @@ public class Room {
     public Room getModwest() {
         return modwest;
     }
+
+
 }
 
