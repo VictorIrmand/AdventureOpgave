@@ -1,14 +1,18 @@
+import java.sql.SQLOutput;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class UI {
     private DenMørkeSkov denMørkeSkov;
     private PlayerOne playerOne;
-    private Items items;
+    private Adventure adventure;
 
-    public UI(DenMørkeSkov denMørkeSkov, PlayerOne playerOne) {
+
+    public UI(DenMørkeSkov denMørkeSkov, PlayerOne playerOne, Adventure adventure) {
         this.denMørkeSkov = denMørkeSkov;
         this.playerOne = playerOne;
+        this.adventure = adventure;
+
     }
 
     public void setGame() {
@@ -30,55 +34,56 @@ public class UI {
 
         System.out.print("Please enter the characters name:");
         String playerOneNavn = input.nextLine();
-        playerOne.setNavn(playerOneNavn);
+        adventure.setPlayerName(playerOneNavn);
 
 
-        System.out.println("Welcome " + playerOne.getNavn());
-        System.out.println("You are in " + denMørkeSkov.getCurrentRoom().getNavn());
+        System.out.println("Welcome " + adventure.getPlayerName());
+        System.out.println("You are in " + adventure.currentRoom().getNavn());
 
         while (!binput.equalsIgnoreCase("exit")) {
+            System.out.println("What is your next action?");
             binput = input.nextLine();
             switch (binput) {
                 case "go north", "go n", "n":
-                    if (denMørkeSkov.getCurrentRoom().getModnorth() != null) {
+                    if (adventure.currentRoom().getModnorth() != null) {
                         System.out.println("Going North!");
-                        denMørkeSkov.setCurrentRoom(denMørkeSkov.getCurrentRoom().getModnorth());
-                        System.out.println("You have moved to " + denMørkeSkov.getCurrentRoom().getNavn()
-                                + " " + denMørkeSkov.getCurrentRoom().getBeskrivelse()
-                                + denMørkeSkov.getCurrentRoom().getForbindelser());
+                        adventure.setCurrentRoom(adventure.currentRoom().getModnorth());
+                        System.out.println("You have moved to " + adventure.currentRoom().getNavn()
+                                + " " + adventure.currentRoom().getBeskrivelse()
+                                + adventure.currentRoom().getForbindelser());
                     } else {
                         System.out.println("You cannot move that way");
                     }
                     break;
                 case "go east", "go e", "e":
-                    if (denMørkeSkov.getCurrentRoom().getModeast() != null) {
+                    if (adventure.currentRoom().getModeast() != null) {
                         System.out.println("Going East!");
-                        denMørkeSkov.setCurrentRoom(denMørkeSkov.getCurrentRoom().getModeast());
-                        System.out.println("You have moved to " + denMørkeSkov.getCurrentRoom().getNavn()
-                                + " " + denMørkeSkov.getCurrentRoom().getBeskrivelse()
-                                + denMørkeSkov.getCurrentRoom().getForbindelser());
+                        adventure.setCurrentRoom(adventure.currentRoom().getModeast());
+                        System.out.println("You have moved to " + adventure.currentRoom().getNavn()
+                                + " " + adventure.currentRoom().getBeskrivelse()
+                                + adventure.currentRoom().getForbindelser());
                     } else {
                         System.out.println("You cannot move that way");
                     }
                     break;
                 case "go south", "go s", "s":
-                    if (denMørkeSkov.getCurrentRoom().getModsouth() != null) {
+                    if (adventure.currentRoom().getModsouth() != null) {
                         System.out.println("Going South!");
-                        denMørkeSkov.setCurrentRoom(denMørkeSkov.getCurrentRoom().getModsouth());
-                        System.out.println("You have moved to " +denMørkeSkov.getCurrentRoom().getNavn()
-                                + " " + denMørkeSkov.getCurrentRoom().getBeskrivelse()
-                                + denMørkeSkov.getCurrentRoom().getForbindelser());
+                        adventure.setCurrentRoom(adventure.currentRoom().getModsouth());
+                        System.out.println("You have moved to " + adventure.currentRoom().getNavn()
+                                + " " + adventure.currentRoom().getBeskrivelse()
+                                + adventure.currentRoom().getForbindelser());
                     } else {
                         System.out.println("You cannot move that way");
                     }
                     break;
                 case "go west", "go w", "w":
-                    if (denMørkeSkov.getCurrentRoom().getModwest() != null) {
+                    if (adventure.currentRoom().getModwest() != null) {
                         System.out.println("Going West!");
-                        denMørkeSkov.setCurrentRoom(denMørkeSkov.getCurrentRoom().getModwest());
-                        System.out.println("You have moved to " + denMørkeSkov.getCurrentRoom().getNavn()
-                                + " " + denMørkeSkov.getCurrentRoom().getBeskrivelse()
-                                + denMørkeSkov.getCurrentRoom().getForbindelser());
+                        adventure.setCurrentRoom(adventure.currentRoom().getModwest());
+                        System.out.println("You have moved to " + adventure.currentRoom().getNavn()
+                                + " " + adventure.currentRoom().getBeskrivelse()
+                                + adventure.currentRoom().getForbindelser());
                     } else {
                         System.out.println("You cannot move that way");
                     }
@@ -87,25 +92,71 @@ public class UI {
                     System.out.println("Insctruction and possible commands: ");
                     break;
                 case "look", "l":
-                    System.out.println("Descriptions of the room: " + denMørkeSkov.getCurrentRoom().getNavn()
-                            + denMørkeSkov.getCurrentRoom().getBeskrivelse()
-                            + denMørkeSkov.getCurrentRoom().getForbindelser());
-                    if (denMørkeSkov.getCurrentRoom().printItems() != "") {
-                        System.out.println("Items in this room: " + denMørkeSkov.getCurrentRoom().printItems());
+                    System.out.println("Description of the room: " + adventure.currentRoom().getNavn()
+                            + adventure.currentRoom().getBeskrivelse()
+                            + adventure.currentRoom().getForbindelser());
+                    if (!adventure.currentRoom().printItems().isEmpty()) {
+                        System.out.println("Items in this room: " + adventure.currentRoom().printItems());
+                    } else {
+                        System.out.println("Ingen items i dette rum");
                     }
-                    else {
-                            System.out.println("Ingen items i dette rum");
+                    break;
+                case "take", "t":
+                    System.out.println(adventure.currentRoom().printItems());
+                    System.out.println("What item you want to take?");
+                    binput = input.nextLine();
+                    adventure.playerOne.addItems(adventure.currentRoom().removeItems(binput));
+                    System.out.println("You took: " + binput);
+                    break;
+                case "drop", "d":
+                    if (!adventure.playerOne.getInventory().isEmpty()) {
+                        System.out.println("What item do you want to drop: " + adventure.playerOne.printInventory());
+                        System.out.println("Type 'cancel' to not drop anything");
+                        binput = input.nextLine();
+                        if (!binput.equalsIgnoreCase("cancel")) {
+                            adventure.currentRoom().addItems(adventure.playerOne.removeItems(binput));
+                            System.out.println("You removed: " + binput);
+                        } else {
+                            System.out.println("Cancelled");
                         }
+                    } else {
+                        System.out.println("Inventory is empty:");
+                    }
+                    break;
+                case "inventory", "inv", "i":
+                    if (!adventure.playerOne.getInventory().isEmpty()) {
+                        System.out.println("Your inventory:" + adventure.playerOne.printInventory());
+                    } else {
+                        System.out.println("Inventory is empty");
+                    }
                     break;
                 case "exit":
                     System.out.println("Game ended\n" + "Thanks for playing");
                     break;
+
                 default:
-                    System.out.println("Wrong input");
+                    String[] navn = binput.split(" ");
+                    String lin = binput.toLowerCase();
+                    if (binput.contains("take")) {
+                        if (navn.length > 1 && navn[1] != null) {
+                            System.out.println("You took: " + adventure.playerOne.addItems(adventure.currentRoom().removeItems(navn[1])));
+                        } else {
+                            System.out.println("Wrong input");
+                        }
+                    }
+                    else if (binput.contains("drop") && !adventure.playerOne.getInventory().isEmpty()) {
+                        if (navn.length > 1 && navn[1] != null) {
+                            System.out.println("You dropped: " + adventure.currentRoom().addItems(adventure.playerOne.removeItems(navn[1])));
+                        } else {
+                            System.out.println("Wrong input");
+                        }
+                    } else {
+                        System.out.println("Invetory is empty");
+                    }
                     break;
+
             }
         }
     }
 }
-
 

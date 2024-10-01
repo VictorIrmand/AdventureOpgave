@@ -4,9 +4,9 @@ public class Items {
     private UI items;
 
 
-    public Items(String beskrivelse, String name){
-        this.name = name;
+    public Items(String name, String beskrivelse){
         this.beskrivelse = beskrivelse;
+        this.name = name;
     }
 
     public String getName() {

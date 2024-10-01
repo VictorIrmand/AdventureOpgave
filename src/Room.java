@@ -64,16 +64,29 @@ public class Room {
     }
 
     //Adder items til room
-    public void addItems(Items i){
+    public Items addItems(Items i){
         items.add(i);
+        return i;
 
     }
     public String printItems(){
         String itemsList = "";
         for (Items r : items){
-            itemsList =itemsList + "\n" + r.getName() + r.getBeskrivelse();
+            itemsList =itemsList + r.getBeskrivelse() + r.getName() + ". ";
         }
         return itemsList;
     }
+    //Remover items fra et room
+    public Items removeItems(String name){
+        for (Items r : items){
+            if (r.getName().equalsIgnoreCase(name)){
+                items.remove(r);
+                return r;
+            }
+        }
+        return null;
+    }
+
+
 }
 
