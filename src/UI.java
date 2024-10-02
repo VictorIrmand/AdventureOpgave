@@ -1,5 +1,3 @@
-import java.sql.SQLOutput;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class UI {
@@ -19,13 +17,17 @@ public class UI {
         denMørkeSkov.buildMap();
         System.out.println("Welcome to Adventure!");
         System.out.println("You have following options and commands");
-        System.out.println("Type - 'go north' to move north");
-        System.out.println("Type - 'go east' to move east");
-        System.out.println("Type - 'go south' to move south");
-        System.out.println("Type - 'go west' to move west");
-        System.out.println("Type 'exit' to exit the game.\n"
-                + "type 'help' to get instructions or possible commands.\n "
-                + "Type 'look' to get a description of the room you in.\n");
+        System.out.println("Type - 'go north, go n or n' to move north");
+        System.out.println("Type - 'go east, go e or e' to move east");
+        System.out.println("Type - 'go south, go s or s' to move south");
+        System.out.println("Type - 'go west, go w or w' to move west");
+        System.out.println("Type - 'take', space 'item' to add a item to your inventory");
+        System.out.println("Type - 'drop', space 'item' to drop a item from your inventory");
+        System.out.println("Type - 'invetory, inv or i' to see your inventory");
+        System.out.println("Type - 'help' to get instructions or possible commands");
+        System.out.println("Type - 'look' to get a description of the room your in");
+        System.out.println("Type 'exit' to exit the game.");
+        System.out.println("-----------------------------------------------------------------");
 
         System.out.println("Press enter to start the game!");
 
@@ -35,55 +37,47 @@ public class UI {
         System.out.print("Please enter the characters name:");
         String playerOneNavn = input.nextLine();
         adventure.setPlayerName(playerOneNavn);
+        System.out.println("-----------------------------------------------------------------");
 
 
         System.out.println("Welcome " + adventure.getPlayerName());
-        System.out.println("You are in " + adventure.currentRoom().getNavn());
+        System.out.println("You are in " + adventure.getCurrentRoomDescription());
 
         while (!binput.equalsIgnoreCase("exit")) {
             System.out.println("What is your next action?");
             binput = input.nextLine();
-            switch (binput) {
+            String[] inputParts = binput.split(" ",2);
+            String command = inputParts[0].toLowerCase();
+            String itemName = (inputParts.length > 1) ? inputParts[1] : null;
+            switch (command) {
                 case "go north", "go n", "n":
-                    if (adventure.currentRoom().getModnorth() != null) {
+                    if (adventure.moveNorth()) {
                         System.out.println("Going North!");
-                        adventure.setCurrentRoom(adventure.currentRoom().getModnorth());
-                        System.out.println("You have moved to " + adventure.currentRoom().getNavn()
-                                + " " + adventure.currentRoom().getBeskrivelse()
-                                + adventure.currentRoom().getForbindelser());
+                        System.out.println("You have moved to " + adventure.getCurrentRoomDescription());
                     } else {
                         System.out.println("You cannot move that way");
                     }
                     break;
                 case "go east", "go e", "e":
-                    if (adventure.currentRoom().getModeast() != null) {
+                    if (adventure.moveEast()) {
                         System.out.println("Going East!");
-                        adventure.setCurrentRoom(adventure.currentRoom().getModeast());
-                        System.out.println("You have moved to " + adventure.currentRoom().getNavn()
-                                + " " + adventure.currentRoom().getBeskrivelse()
-                                + adventure.currentRoom().getForbindelser());
+                        System.out.println("You have moved to " + adventure.getCurrentRoomDescription());
                     } else {
                         System.out.println("You cannot move that way");
                     }
                     break;
                 case "go south", "go s", "s":
-                    if (adventure.currentRoom().getModsouth() != null) {
+                    if (adventure.moveSouth()) {
                         System.out.println("Going South!");
-                        adventure.setCurrentRoom(adventure.currentRoom().getModsouth());
-                        System.out.println("You have moved to " + adventure.currentRoom().getNavn()
-                                + " " + adventure.currentRoom().getBeskrivelse()
-                                + adventure.currentRoom().getForbindelser());
+                        System.out.println("You have moved to " + adventure.getCurrentRoomDescription());
                     } else {
                         System.out.println("You cannot move that way");
                     }
                     break;
                 case "go west", "go w", "w":
-                    if (adventure.currentRoom().getModwest() != null) {
+                    if (adventure.moveWest()) {
                         System.out.println("Going West!");
-                        adventure.setCurrentRoom(adventure.currentRoom().getModwest());
-                        System.out.println("You have moved to " + adventure.currentRoom().getNavn()
-                                + " " + adventure.currentRoom().getBeskrivelse()
-                                + adventure.currentRoom().getForbindelser());
+                        System.out.println("You have moved to " + adventure.getCurrentRoomDescription());
                     } else {
                         System.out.println("You cannot move that way");
                     }
@@ -92,67 +86,64 @@ public class UI {
                     System.out.println("Insctruction and possible commands: ");
                     break;
                 case "look", "l":
-                    System.out.println("Description of the room: " + adventure.currentRoom().getNavn()
-                            + adventure.currentRoom().getBeskrivelse()
-                            + adventure.currentRoom().getForbindelser());
+                    System.out.println("Description of the room: " + adventure.getCurrentRoomDescription());
                     if (!adventure.currentRoom().printItems().isEmpty()) {
-                        System.out.println("Items in this room: " + adventure.currentRoom().printItems());
+                        System.out.println("Items in this room: " + adventure.getCurrentRoomItems());
                     } else {
                         System.out.println("Ingen items i dette rum");
                     }
                     break;
                 case "take", "t":
-                    System.out.println(adventure.currentRoom().printItems());
+                    if (adventure.handleTake(itemName)){
+                        System.out.println("You took: " + itemName);
+                    } else {
+                        System.out.println("Item not found in the room\n"
+                                + "Type 'look' to look again what items there are in this room");
+                    }
+                    /*System.out.println("Items available: " + adventure.getCurrentRoomItems());
                     System.out.println("What item you want to take?");
-                    binput = input.nextLine();
-                    adventure.playerOne.addItems(adventure.currentRoom().removeItems(binput));
-                    System.out.println("You took: " + binput);
+                    String itemToTake = input.nextLine();
+                    adventure.takeItem(itemToTake);
+                    System.out.println("You took: " + itemToTake);
+
+                     */
                     break;
                 case "drop", "d":
-                    if (!adventure.playerOne.getInventory().isEmpty()) {
-                        System.out.println("What item do you want to drop: " + adventure.playerOne.printInventory());
+                    if (adventure.handleDrop(itemName)){
+                        System.out.println("You dropped: " + itemName);
+                    } else {
+                        System.out.println("Item not found in your inventory"
+                                + "Type 'inventory' to look again in your inventory - type 'inventory\n");
+                    }
+                    /*if (!adventure.getPlayerInventory().isEmpty()) {
+                        System.out.println("What item do you want to drop: " + adventure.printInventory());
                         System.out.println("Type 'cancel' to not drop anything");
-                        binput = input.nextLine();
-                        if (!binput.equalsIgnoreCase("cancel")) {
-                            adventure.currentRoom().addItems(adventure.playerOne.removeItems(binput));
-                            System.out.println("You removed: " + binput);
+                        String itemToDrop = input.nextLine();
+                        if (!itemToDrop.equalsIgnoreCase("cancel")) {
+                            adventure.dropItem(itemToDrop);
+                            System.out.println("You removed: " + itemToDrop);
                         } else {
                             System.out.println("Cancelled");
                         }
                     } else {
                         System.out.println("Inventory is empty:");
                     }
+
+                     */
                     break;
                 case "inventory", "inv", "i":
-                    if (!adventure.playerOne.getInventory().isEmpty()) {
-                        System.out.println("Your inventory:" + adventure.playerOne.printInventory());
+                    if (!adventure.getPlayerInventory().isEmpty()) {
+                        System.out.println("Your inventory:" + adventure.printInventory());
                     } else {
                         System.out.println("Inventory is empty");
                     }
                     break;
                 case "exit":
-                    System.out.println("Game ended\n" + "Thanks for playing");
+                    System.out.println("Game ended\n" + "Thanks for playing!");
                     break;
 
                 default:
-                    String[] navn = binput.split(" ");
-                    String lin = binput.toLowerCase();
-                    if (binput.contains("take")) {
-                        if (navn.length > 1 && navn[1] != null) {
-                            System.out.println("You took: " + adventure.playerOne.addItems(adventure.currentRoom().removeItems(navn[1])));
-                        } else {
-                            System.out.println("Wrong input");
-                        }
-                    }
-                    else if (binput.contains("drop") && !adventure.playerOne.getInventory().isEmpty()) {
-                        if (navn.length > 1 && navn[1] != null) {
-                            System.out.println("You dropped: " + adventure.currentRoom().addItems(adventure.playerOne.removeItems(navn[1])));
-                        } else {
-                            System.out.println("Wrong input");
-                        }
-                    } else {
-                        System.out.println("Invetory is empty");
-                    }
+                    System.out.println("Unkown command, please try again!");
                     break;
 
             }

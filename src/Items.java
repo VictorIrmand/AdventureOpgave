@@ -16,4 +16,8 @@ public class Items {
     public String getBeskrivelse() {
         return beskrivelse;
     }
+    @Override
+    public String toString(){
+        return beskrivelse + name;
+    }
 }

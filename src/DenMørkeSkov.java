@@ -5,7 +5,7 @@ public class DenMørkeSkov {
 
     public void buildMap() {
         //De forskellige rum
-        Room room1 = new Room("Room 1 ","- simple room with, ", "2 doors");
+        Room room1 = new Room("Room 1 ","- The intrance,", "2 doors");
         Room room2 = new Room("Room 2 -","large area with two strange men and ", "2 doors ");
         Room room3 = new Room("Room 3 -","small pit with spiders and ", "2 exits ");
         Room room4 = new Room("Room 4 -","A dragons nest with ", "2 exits ");
@@ -20,7 +20,7 @@ public class DenMørkeSkov {
         Items minigun = new Items("minigun","Pink ");
         Items bue = new Items("bue","Grøn ");
         room1.addItems(lyssværd);
-        room1.addItems(minigun);
+        room2.addItems(minigun);
         room3.addItems(bue);
 
         //Room 1 muligheder
