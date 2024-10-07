@@ -41,14 +41,16 @@ public class UI {
 
 
         System.out.println("Welcome " + adventure.getPlayerName());
+        //System.out.println("Health: " + adventure.getHealthBar());
         System.out.println("You are in " + adventure.getCurrentRoomDescription());
 
         while (!binput.equalsIgnoreCase("exit")) {
+            System.out.println("-----------------------------------------------------------------");
             System.out.println("What is your next action?");
             binput = input.nextLine();
-            String[] inputParts = binput.split(" ",2);
-            String command = inputParts[0].toLowerCase();
-            String itemName = (inputParts.length > 1) ? inputParts[1] : null;
+            String[] brugerinput = binput.split(" ",2);
+            String command = brugerinput[0].toLowerCase();
+            String itemName = (brugerinput.length > 1) ? brugerinput[1] : null;
             switch (command) {
                 case "go north", "go n", "n":
                     if (adventure.moveNorth()) {
@@ -90,7 +92,7 @@ public class UI {
                     if (!adventure.currentRoom().printItems().isEmpty()) {
                         System.out.println("Items in this room: " + adventure.getCurrentRoomItems());
                     } else {
-                        System.out.println("Ingen items i dette rum");
+                        System.out.println("No items in this room:");
                     }
                     break;
                 case "take", "t":
@@ -100,46 +102,34 @@ public class UI {
                         System.out.println("Item not found in the room\n"
                                 + "Type 'look' to look again what items there are in this room");
                     }
-                    /*System.out.println("Items available: " + adventure.getCurrentRoomItems());
-                    System.out.println("What item you want to take?");
-                    String itemToTake = input.nextLine();
-                    adventure.takeItem(itemToTake);
-                    System.out.println("You took: " + itemToTake);
-
-                     */
                     break;
                 case "drop", "d":
                     if (adventure.handleDrop(itemName)){
                         System.out.println("You dropped: " + itemName);
                     } else {
-                        System.out.println("Item not found in your inventory"
-                                + "Type 'inventory' to look again in your inventory - type 'inventory\n");
+                        System.out.println(itemName + " not found in your inventory"
+                                + "\nType 'inventory' to look again in your inventory");
                     }
-                    /*if (!adventure.getPlayerInventory().isEmpty()) {
-                        System.out.println("What item do you want to drop: " + adventure.printInventory());
-                        System.out.println("Type 'cancel' to not drop anything");
-                        String itemToDrop = input.nextLine();
-                        if (!itemToDrop.equalsIgnoreCase("cancel")) {
-                            adventure.dropItem(itemToDrop);
-                            System.out.println("You removed: " + itemToDrop);
-                        } else {
-                            System.out.println("Cancelled");
-                        }
-                    } else {
-                        System.out.println("Inventory is empty:");
-                    }
-
-                     */
                     break;
                 case "inventory", "inv", "i":
                     if (!adventure.getPlayerInventory().isEmpty()) {
-                        System.out.println("Your inventory:" + adventure.printInventory());
+                        System.out.println("Your inventory: " + adventure.printInventory());
                     } else {
                         System.out.println("Inventory is empty");
                     }
                     break;
+                case "health":
+                    if (adventure.getHealthBar() < 50) {
+                        System.out.println("Your health is low, avoid fighting: " + adventure.getHealthBar());
+                    } else {
+                        System.out.println("Health: " + adventure.getHealthBar());
+                    }
+                    break;
+                case "eat", "drink":
+                    System.out.println(adventure.handleEat(itemName));
+                    break;
                 case "exit":
-                    System.out.println("Game ended\n" + "Thanks for playing!");
+                    System.out.println("Game ended\n" + "Thanks for playing " + adventure.getPlayerName() + "!");
                     break;
 
                 default:

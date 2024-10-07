@@ -6,22 +6,39 @@ public class DenMørkeSkov {
     public void buildMap() {
         //De forskellige rum
         Room room1 = new Room("Room 1 ","- The intrance,", "2 doors");
+        Item lightSaber = new Item("lightsaber");
+        room1.addItems(lightSaber);
+
         Room room2 = new Room("Room 2 -","large area with two strange men and ", "2 doors ");
+
         Room room3 = new Room("Room 3 -","small pit with spiders and ", "2 exits ");
+        Item bow = new Item("bow");
+        room3.addItems(bow);
+
         Room room4 = new Room("Room 4 -","A dragons nest with ", "2 exits ");
+
+        Food redBull = new Food("Redbull",-10,"\u26A1");
+        room4.addItems(redBull);
+
         Room room5 = new Room("Room 5 -"," ", " ");
         Room room6 = new Room("Room 6 -"," ", " ");
+
+        Item miniGun = new Item("minigun");
+        room6.addItems(miniGun);
+
+        Food cake = new Food("cake", 25,"\uD83C\uDF70");
+        room6.addItems(cake);
+
         Room room7 = new Room("Room 7 -"," ", " ");
         Room room8 = new Room("Room 8 -"," ", " ");
         Room room9 = new Room("Room 9 -"," ", " ");
+        Food apple = new Food("Apple", 15,"\uD83C\uDF70");
+        room9.addItems(apple);
 
         //Items
-        Items lyssværd = new Items("lyssværd","Blåt ");
-        Items minigun = new Items("minigun","Pink ");
-        Items bue = new Items("bue","Grøn ");
-        room1.addItems(lyssværd);
-        room2.addItems(minigun);
-        room3.addItems(bue);
+
+
+
 
         //Room 1 muligheder
         room1.setModeast(room2);
@@ -62,10 +79,15 @@ public class DenMørkeSkov {
         currentRoom = room1;
     }
     public Room getCurrentRoom() {
-        return currentRoom;
+        if (currentRoom == null){
+            System.out.println("Dette rum er null");
+
+        }
+        return this.currentRoom;
     }
 
     public void setCurrentRoom(Room room){
         this.currentRoom = room;
     }
+
 }

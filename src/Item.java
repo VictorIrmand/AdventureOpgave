@@ -1,12 +1,15 @@
-public class Items {
-    private String name;
-    private String beskrivelse;
+public class Item {
+    protected String name;
+    protected String beskrivelse;
     private UI items;
 
+    public Item(){
 
-    public Items(String name, String beskrivelse){
-        this.beskrivelse = beskrivelse;
+    }
+
+    public Item(String name){
         this.name = name;
+
     }
 
     public String getName() {
@@ -18,6 +21,6 @@ public class Items {
     }
     @Override
     public String toString(){
-        return beskrivelse + name;
+        return name;
     }
 }

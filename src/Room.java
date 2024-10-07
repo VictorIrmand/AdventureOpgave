@@ -6,7 +6,7 @@ public class Room {
     private String beskrivelse;
     private String forbindelser;
     private Room modeast, modsouth, modnorth, modwest;
-    private ArrayList<Items> items = new ArrayList<>();
+    private ArrayList<Item> items = new ArrayList<>();
 
 
     public String getNavn() {
@@ -59,26 +59,26 @@ public class Room {
         return modwest;
     }
 
-    public ArrayList<Items> getItems() {
+    public ArrayList<Item> getItems() {
         return items;
     }
 
     //Adder items til room
-    public Items addItems(Items i){
+    public Item addItems(Item i){
         items.add(i);
         return i;
 
     }
     public String printItems(){
         String itemsList = "";
-        for (Items r : items){
-            itemsList =itemsList + r.getBeskrivelse() + r.getName() + ". ";
+        for (Item r : items){
+            itemsList =itemsList + r.getName() + ". ";
         }
         return itemsList;
     }
     //Remover items fra et room
-    public Items removeItems(String name){
-        for (Items r : items){
+    public Item removeItems(String name){
+        for (Item r : items){
             if (r.getName().equalsIgnoreCase(name)){
                 items.remove(r);
                 return r;
@@ -87,6 +87,25 @@ public class Room {
         return null;
     }
 
+    public void removeItem(Item item){
+        items.remove(item);
 
+    }
+public Item findItem(String name){
+        for (Item item : items){
+            if (item.getName().equalsIgnoreCase(name)){
+                return item;
+            }
+        }
+        return null;
+}
+@Override
+    public String toString(){
+        if(!items.isEmpty()){
+            return navn;
+        }else {
+            return "There is nothing to pick up here.";
+        }
+}
 }
 
