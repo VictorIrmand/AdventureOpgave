@@ -2,42 +2,50 @@ import java.util.ArrayList;
 
 public class PlayerOne {
     private String navn;
-    private Room currentRoom;
     private DenMørkeSkov denMørkeSkov;
-    private int healthGain;
     private ArrayList<Item> inventory = new ArrayList<>();
+    private ArrayList<Item> equipped = new ArrayList<>();
     private int healthBar = 100;
 
 
-    public PlayerOne(DenMørkeSkov denMørkeSkov, Room currentRoom) {
-        this.currentRoom = currentRoom;
+    public PlayerOne(DenMørkeSkov denMørkeSkov) {
         this.denMørkeSkov = denMørkeSkov;
     }
 
-    public void healthGain(){
-
-    }
 
 
     public ArrayList<Item> getInventory() {
         return inventory;
     }
 
+    public ArrayList<Item> getEquipped() {
+        return equipped;
+    }
+
     public String printInventory() {
-       String inventoryList = "";
+        String inventoryList = "";
         for (Item r : inventory) {
-               inventoryList = inventoryList + r.getName() + ". ";
+            inventoryList = inventoryList + r.getShortName() + r.getEmoji() + " - " + r.getLongName() + "\n";
         }
         return inventoryList;
+    }
+
+    public String printEquippedWeapon() {
+        String equippedWeapon = "";
+        for (Item r : equipped) {
+            equippedWeapon = equippedWeapon + r.getShortName() + r.getEmoji() + " - " + r.getLongName();
+        }
+        return equippedWeapon;
     }
 
     public void addItems(String itemName) {
         Item it = denMørkeSkov.getCurrentRoom().findItem(itemName);
         if (it != null) {
-           inventory.add(it);
+            inventory.add(it);
 
         }
     }
+
     public Item removeItemsFromInventory(String name) {
         Item found = findItemInInventory(name);
         inventory.remove(found);
@@ -47,11 +55,26 @@ public class PlayerOne {
 
     public Item findItemInInventory(String name) {
         for (Item item : inventory) {
-            if (item.getName().equalsIgnoreCase(name)) {
+            if (item.getShortName().equalsIgnoreCase(name)) {
                 return item;
             }
         }
-return null;
+        return null;
+    }
+
+    public Item findItemInEquipped(String name) {
+        for (Item item : equipped) {
+            if (item.getShortName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public Item removeItemsFromEquipped(String name) {
+        Item found = findItemInEquipped(name);
+        equipped.remove(found);
+        return found;
     }
 
     public String getNavn() {
@@ -73,39 +96,83 @@ return null;
             healthBar += increase;
         }
     }
-        public void decreaseHealth(int decrease){
-        healthBar = healthBar + decrease;
-        }
 
-    public FoodStatus eat(String foodName) {
-       Item itemToEat = denMørkeSkov.getCurrentRoom().findItem(foodName);
-       if (itemToEat == null){
-           itemToEat  = findItemInInventory(foodName);
-           if (itemToEat == null){
-               return FoodStatus.NOT_HERE;
-           }
-       }
-       if (itemToEat instanceof Food) {
-           Food food = (Food) itemToEat;
-        if (food.getHealthPoint() > 0) {
-            increaseHealth(food.getHealthPoint());
-            inventory.remove(food);
-            denMørkeSkov.getCurrentRoom().removeItem(food);
-            return FoodStatus.GOOD;
-        }
-        else if (food.getHealthPoint() < 0) {
-            decreaseHealth(food.getHealthPoint());
-            inventory.remove(food);
-            denMørkeSkov.getCurrentRoom().removeItem(food);
-            return FoodStatus.BAD;
-        } else if (!(itemToEat instanceof Food)){
-            return FoodStatus.NOT_FOOD;
-        }
-       }
-return FoodStatus.NOT_FOOD;
+    public void decreaseHealth(int decrease) {
+        healthBar = healthBar + decrease;
     }
 
+    public String eat(String foodName) {
+        Item itemToEat = denMørkeSkov.getCurrentRoom().findItem(foodName);
+        if (itemToEat == null) {
+            itemToEat = findItemInInventory(foodName);
+            if (itemToEat == null) {
+                return foodName + " is not in this room or your inventory";
+            }
+        }
+        if (itemToEat instanceof Food) {
+            Food food = (Food) itemToEat;
+            if (food.getHealthPoint() > 0) {
+                increaseHealth(food.getHealthPoint());
+                inventory.remove(food);
+                denMørkeSkov.getCurrentRoom().removeItem(food);
+                return "You ate " + foodName + "!" + " You gained " + food.getHealthPoint() + " healthpoints";
+            } else if (food.getHealthPoint() < 0) {
+                decreaseHealth(food.getHealthPoint());
+                inventory.remove(food);
+                denMørkeSkov.getCurrentRoom().removeItem(food);
+                return "Not good, you just lost health!" + " Current health " + healthBar + " healthpoints";
+            }
+        }
+        return "You cannot eat that!";
+    }
+
+    public String equip(String itemName) {
+        Item itemToEquip = findItemInInventory(itemName);
+        if (!equipped.isEmpty()) {
+            return "Sorry, you already have a weapon equipped, try 'swap' instead";
+        }
+        if (itemToEquip == null) {
+            return "Sorry, item has to be in your inventory";
+        }
+        if (itemToEquip instanceof Weapon) {
+            inventory.remove(itemToEquip);
+            equipped.add(itemToEquip);
+            return "Equipped: " + itemToEquip;
+
+        }
+        return "Sorry, cannot equip that type of item";
+    }
+
+    public String swap(String itemName) {
+        String oldItem = "";
+        Item itemToSwap = findItemInInventory(itemName);
+        Item itemEquipped = equipped.getFirst();
+        //Item itemEquipped = findItemInEquipped(oldItem);
+        if (equipped.isEmpty()) {
+            return "Sorry, cannot swap with a empty slot";
+        }
+        if (itemToSwap == null) {
+            return "Sorry, item has to be in your inventory to swap";
+        }
+        if (itemToSwap instanceof Weapon) {
+            equipped.remove(itemEquipped);
+            equipped.add(itemToSwap);
+            inventory.add(itemEquipped);
+            inventory.remove(itemToSwap);
+            return "Swapped - weapon equipped: " + itemToSwap;
+        }
+        return "Sorry, item cannot be swapped";
+    }
+
+    public String attack() {
+        if (equipped.isEmpty()) {
+            return "You need to equip an item to attack";
+        }
+        Weapon weaponEquipped = (Weapon) equipped.getFirst();
+        return weaponEquipped.attack();
+    }
 }
+
 
 
 

@@ -7,20 +7,18 @@ public class Adventure {
     DenMørkeSkov denMørkeSkov;
     UI ui;
     Food food;
-    Item item;
 
 
     public Adventure() {
         denMørkeSkov = new DenMørkeSkov();
         denMørkeSkov.buildMap();
-        playerOne = new PlayerOne(denMørkeSkov, denMørkeSkov.getCurrentRoom());
+        playerOne = new PlayerOne(denMørkeSkov);
         food = new Food();
         ui = new UI(denMørkeSkov, playerOne, this);
 
     }
 
     public void adventureGame() {
-        //denMørkeSkov.buildMap();
         ui.setGame();
     }
 
@@ -46,6 +44,10 @@ public class Adventure {
 
     public String getCurrentRoomDescription() {
         return currentRoom().getNavn() + " " + currentRoom().getBeskrivelse() + " " + currentRoom().getForbindelser();
+    }
+
+    public String getCurrentRoomName() {
+        return currentRoom().getNavn();
     }
 
     public boolean moveNorth() {
@@ -86,14 +88,6 @@ public class Adventure {
         return print;
     }
 
-    public void takeItem(String name) {
-        playerOne.addItems(name);
-        currentRoom().removeItems(name);
-    }
-
-    public void dropItem(String itemName) {
-        currentRoom().addItems(playerOne.removeItemsFromInventory(itemName));
-    }
 
     public ArrayList<Item> getPlayerInventory() {
         return playerOne.getInventory();
@@ -103,16 +97,13 @@ public class Adventure {
         return playerOne.printInventory();
     }
 
-   /*public Item handleEat(Item item){
-       Food food = playerOne.findItem(item);
-        if (food instanceof Food){
-            playerOne.eatFood(food);
-            return food;
-        }
-        return null;
-   }
+    public String printEquippedWeapon() {
+        return playerOne.printEquippedWeapon();
+    }
 
-    */
+    public int getHealthBar() {
+        return playerOne.getHealthBar();
+    }
 
     public boolean handleTake(String itemName) {
         if (itemName != null && !itemName.isEmpty()) {
@@ -126,23 +117,29 @@ public class Adventure {
         return false;
     }
 
-    public boolean handleDrop(String itemName) {
-        if (playerOne.getInventory().isEmpty()) {
-            return false;
+    public String handleDrop(String itemName) {
+        if (playerOne.getInventory().isEmpty() && playerOne.getEquipped().isEmpty()) {
+            return itemName + " is not equipped or found in inventory" + "\nType 'inventory' to look again in your inventory";
         }
+        Item found = playerOne.findItemInInventory(itemName);
         if (itemName != null && !itemName.isEmpty()) {
-            currentRoom().addItems(playerOne.removeItemsFromInventory(itemName));
-            return true;
+            if (found != null && playerOne.getInventory().contains(found)) {
+                denMørkeSkov.getCurrentRoom().addItems(playerOne.removeItemsFromInventory(itemName));
+                return "You dropped: " + itemName;
+            }
+            Item foundEquipped = playerOne.findItemInEquipped(itemName);
+            if (foundEquipped != null && playerOne.getEquipped().contains(foundEquipped)) {
+                denMørkeSkov.getCurrentRoom().addItems(playerOne.removeItemsFromEquipped((itemName)));
+                return "You dropped: " + itemName;
+            }
         }
-        return false;
-    }
-
-    public int getHealthBar() {
-        return playerOne.getHealthBar();
+        return "Item not found, try look for it...";
     }
 
     public String handleEat(String foodName) {
-        Item itemToEat = denMørkeSkov.getCurrentRoom().findItem(foodName);
+       return playerOne.eat(foodName);
+    }
+       /* Item itemToEat = denMørkeSkov.getCurrentRoom().findItem(foodName);
         if (itemToEat == null) {
             itemToEat = playerOne.findItemInInventory(foodName);
         }
@@ -170,9 +167,28 @@ public class Adventure {
         } else {
             return "The item is not food";
         }
+
     }
 
-}
+        */
+
+
+            public String handleEquip (String itemName){
+                return playerOne.equip(itemName);
+
+            }
+
+            public String handleSwap (String itemName){
+                return playerOne.swap(itemName);
+            }
+
+            public String handleAttack () {
+                return playerOne.attack();
+            }
+
+        }
+
+
 
 
 

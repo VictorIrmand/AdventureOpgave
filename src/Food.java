@@ -1,36 +1,24 @@
 public class Food extends Item {
-   private int healthPoint;
-   private int healthGain;
-   private String emojis;
+    private int healthPoint;
 
+    public Food() {
 
+    }
 
-   public Food(){
-
-}
-    public Food(String name, int healthPoint, String emojis) {
-        super(name);
+    public Food(String shortName, String longName, int healthPoint, String emoji) {
+        super(shortName, longName, emoji);
         this.healthPoint = healthPoint;
-        this.emojis = emojis;
+
     }
 
-    public String getEmojis() {
-        return emojis;
-    }
 
     public int getHealthPoint() {
-       return healthPoint;
+        return healthPoint;
     }
 
-    public int getHealthGain(Food foodItem){
-    return foodItem.getHealthPoint();
-    }
-    public void setHealthbar(int healthbar){
-        this.healthGain += healthbar;
-    }
 
     @Override
-    public String toString(){
-        return super.toString() + healthPoint + emojis;
+    public String toString() {
+        return super.toString() + healthPoint;
     }
 }

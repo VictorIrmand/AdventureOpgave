@@ -5,39 +5,54 @@ public class DenMørkeSkov {
 
     public void buildMap() {
         //De forskellige rum
-        Room room1 = new Room("Room 1 ","- The intrance,", "2 doors");
-        Item lightSaber = new Item("lightsaber");
-        room1.addItems(lightSaber);
+        //Room 1
+        Room room1 = new Room("Room 1 ", "- The intrance,", "2 doors");
 
-        Room room2 = new Room("Room 2 -","large area with two strange men and ", "2 doors ");
 
-        Room room3 = new Room("Room 3 -","small pit with spiders and ", "2 exits ");
-        Item bow = new Item("bow");
+        //Room 2
+        Room room2 = new Room("Room 2 -", "large area with two strange men and ", "2 doors ");
+        Item sword = new MeleeWeapon("sword", "Made out of valkyrian steel - damage 20", 20, "\u2694\uFE0F");
+        room2.addItems(sword);
+        Item herb = new Food("Herb", "Is a fragrant herb that heals wounds and soothes the soul - health 40", 40, "\uD83C\uDF3F");
+        room2.addItems(herb);
+
+
+        //Room 3
+        Room room3 = new Room("Room 3 -", "small pit with spiders and ", "2 exits ");
+        Item bow = new RangedWeapon("bow", "Green bow with magic arrows - damage 25", 25, 3, "\uD83C\uDFF9");
         room3.addItems(bow);
 
-        Room room4 = new Room("Room 4 -","A dragons nest with ", "2 exits ");
-
-        Food redBull = new Food("Redbull",-10,"\u26A1");
+        //Room 4
+        Room room4 = new Room("Room 4 -", "A dragons nest with ", "2 exits ");
+        Food redBull = new Food("Redbull", "Might be good, might be bad, drink if you dare...", -10, "⚡");
         room4.addItems(redBull);
+        Item lightSaber = new MeleeWeapon("lightsaber", "Cuts through everything - damage 50", 50, "\uD83D\uDFE6\u2694\uFE0F");
+        room4.addItems(lightSaber);
 
-        Room room5 = new Room("Room 5 -"," ", " ");
-        Room room6 = new Room("Room 6 -"," ", " ");
+        //Room 5
+        Room room5 = new Room("Room 5 -", " ", " ");
 
-        Item miniGun = new Item("minigun");
+        //Room 6
+        Room room6 = new Room("Room 6 -", " ", " ");
+        Item miniGun = new RangedWeapon("minigun", "Legendary minigun with rapidfire - damage 10", 5, 7, "\uD83D\uDD2B\uD83D\uDCA5");
         room6.addItems(miniGun);
+        Item eliksir = new Food("Eliksir", "Is a shimmering elixir that restores vitality with every sip - damage 25", 25, "\uD83C\uDF7B");
+        room6.addItems(eliksir);
 
-        Food cake = new Food("cake", 25,"\uD83C\uDF70");
-        room6.addItems(cake);
+        //Room 7
+        Room room7 = new Room("Room 7 -", " ", " ");
+        Item stormAxe = new MeleeWeapon("Hammer", "Stormhammer is a mighty hammer that unleashes thunderous blows - damage 40", 40, "\u2692\u26A1");
+        room7.addItems(stormAxe);
 
-        Room room7 = new Room("Room 7 -"," ", " ");
-        Room room8 = new Room("Room 8 -"," ", " ");
-        Room room9 = new Room("Room 9 -"," ", " ");
-        Food apple = new Food("Apple", 15,"\uD83C\uDF70");
+        //Room 8
+        Room room8 = new Room("Room 8 -", " ", " ");
+        Item shadowDagger = new MeleeWeapon("Dagger", "Shadow Dagger is a sleek dagger that whispers secrets of the night with every strike - damage 30", 30, "\uD83D\uDDE1");
+        room8.addItems(shadowDagger);
+
+        //Room 9
+        Room room9 = new Room("Room 9 -", " ", " ");
+        Item apple = new Food("Apple", "Is a radiant apple that grants a burst of energy, invigorating the spirit - health +15", 15, "\uD83C\uDF4F");
         room9.addItems(apple);
-
-        //Items
-
-
 
 
         //Room 1 muligheder
@@ -78,15 +93,16 @@ public class DenMørkeSkov {
 
         currentRoom = room1;
     }
+
     public Room getCurrentRoom() {
-        if (currentRoom == null){
+        if (currentRoom == null) {
             System.out.println("Dette rum er null");
 
         }
         return this.currentRoom;
     }
 
-    public void setCurrentRoom(Room room){
+    public void setCurrentRoom(Room room) {
         this.currentRoom = room;
     }
 

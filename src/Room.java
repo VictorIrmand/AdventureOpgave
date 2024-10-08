@@ -64,22 +64,24 @@ public class Room {
     }
 
     //Adder items til room
-    public Item addItems(Item i){
+    public Item addItems(Item i) {
         items.add(i);
         return i;
 
     }
-    public String printItems(){
+
+    public String printItems() {
         String itemsList = "";
-        for (Item r : items){
-            itemsList =itemsList + r.getName() + ". ";
+        for (Item r : items) {
+            itemsList = itemsList + r.getShortName() + r.getEmoji() + " - " + r.getLongName() + "\n";
         }
         return itemsList;
     }
+
     //Remover items fra et room
-    public Item removeItems(String name){
-        for (Item r : items){
-            if (r.getName().equalsIgnoreCase(name)){
+    public Item removeItems(String name) {
+        for (Item r : items) {
+            if (r.getShortName().equalsIgnoreCase(name)) {
                 items.remove(r);
                 return r;
             }
@@ -87,25 +89,27 @@ public class Room {
         return null;
     }
 
-    public void removeItem(Item item){
+    public void removeItem(Item item) {
         items.remove(item);
 
     }
-public Item findItem(String name){
-        for (Item item : items){
-            if (item.getName().equalsIgnoreCase(name)){
+
+    public Item findItem(String name) {
+        for (Item item : items) {
+            if (item.getShortName().equalsIgnoreCase(name)) {
                 return item;
             }
         }
         return null;
-}
-@Override
-    public String toString(){
-        if(!items.isEmpty()){
+    }
+
+    @Override
+    public String toString() {
+        if (!items.isEmpty()) {
             return navn;
-        }else {
+        } else {
             return "There is nothing to pick up here.";
         }
-}
+    }
 }
 
