@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class UI {
@@ -24,7 +25,7 @@ public class UI {
         System.out.println("Type - 'help' to get instructions or possible commands");
         System.out.println("Type - 'look' to get a description of the room your in");
         System.out.println("Type - 'equip' followed by the 'item name' to equip a item from your inventory");
-        System.out.println("Type - 'attack' to attack with your equipped weapon");
+        System.out.println("Type - 'attack' to attack with your equipped weapon - but be careful, the enemy hits back!");
         System.out.println("Type 'exit' to exit the game.");
         System.out.println("-----------------------------------------------------------------");
 
@@ -33,7 +34,17 @@ public class UI {
         Scanner input = new Scanner(System.in);
         String binput = input.nextLine();
 
-        System.out.print("Please enter the characters name:");
+        System.out.println("Shadows of the Dark Forest!");
+        System.out.println("In the heart of the Dark Forest, a realm shrouded in mystery and shadow, the fearsome dragon Drakthor reigns supreme.\nOnce a vibrant land, the forest is now cursed, twisted by dark magic and inhabited by restless spirits and fierce creatures.\nDrakthor, with scales as black as night and eyes like molten gold, terrorizes nearby villages, demanding tribute and spreading fear.\n" +
+                "\n" +
+                "However, hope remains. Whispers of an ancient prophecy speak of a hero destined to venture into the forest, overcome its dangers, and confront Drakthor.");
+        System.out.println("\nYour quest!");
+        System.out.println("As the chosen hero, your mission is to traverse the treacherous paths of the Dark Forest, gathering powerful weapons, magical foods, and other treasures along the way.\n" +
+                "\n" +
+                "Objective: Defeat Drakthor and restore peace to the realm.\n" +
+                "Your journey will test your bravery and cunning. Will you rise as the savior of the forest or fall victim to its darkness? The fate of the realm is in your hands!");
+
+        System.out.print("Please enter the heroes name:");
         String playerOneNavn = input.nextLine();
         adventure.setPlayerName(playerOneNavn);
         System.out.println("-----------------------------------------------------------------");
@@ -41,7 +52,7 @@ public class UI {
 
         System.out.println("Welcome " + adventure.getPlayerName());
         System.out.println("Start health: " + adventure.getHealthBar());
-        System.out.println("You are in " + adventure.getCurrentRoomDescription());
+        System.out.println("You are at " + adventure.getCurrentRoomDescription());
 
         while (!binput.equalsIgnoreCase("exit")) {
             System.out.println("-----------------------------------------------------------------");
@@ -50,37 +61,58 @@ public class UI {
             String[] brugerinput = binput.split(" ", 2);
             String command = brugerinput[0].toLowerCase();
             String itemName = (brugerinput.length > 1) ? brugerinput[1] : null;
+            String enemyName = (brugerinput.length > 1) ? brugerinput[1] : null;
             switch (command) {
-                case "go north", "go n", "n":
+                case "north", "n":
                     if (adventure.moveNorth()) {
                         System.out.println("Going North!");
                         System.out.println("You have moved to " + adventure.getCurrentRoomDescription());
                     } else {
                         System.out.println("You cannot move that way");
                     }
+                    if (!adventure.getCurrentRoomEnemies().isEmpty()){
+                        System.out.println("Watch out, enemies in this room...");
+                    } else {
+                        System.out.println("No enemies in this rooom");
+                    }
                     break;
-                case "go east", "go e", "e":
+                case "east","e":
                     if (adventure.moveEast()) {
                         System.out.println("Going East!");
                         System.out.println("You have moved to " + adventure.getCurrentRoomDescription());
                     } else {
                         System.out.println("You cannot move that way");
                     }
+                    if (!adventure.getCurrentRoomEnemies().isEmpty()){
+                        System.out.println("Watch out, enemies in this room...");
+                    } else {
+                        System.out.println("No enemies in this rooom");
+                    }
                     break;
-                case "go south", "go s", "s":
+                case "south", "s":
                     if (adventure.moveSouth()) {
                         System.out.println("Going South!");
                         System.out.println("You have moved to " + adventure.getCurrentRoomDescription());
                     } else {
                         System.out.println("You cannot move that way");
                     }
+                    if (!adventure.getCurrentRoomEnemies().isEmpty()){
+                        System.out.println("Watch out, enemies in this room...");
+                    } else {
+                        System.out.println("No enemies in this rooom");
+                    }
                     break;
-                case "go west", "go w", "w":
+                case "west", "w":
                     if (adventure.moveWest()) {
                         System.out.println("Going West!");
                         System.out.println("You have moved to " + adventure.getCurrentRoomDescription());
                     } else {
                         System.out.println("You cannot move that way");
+                    }
+                    if (!adventure.getCurrentRoomEnemies().isEmpty()){
+                        System.out.println("Watch out, enemies in this room...");
+                    } else {
+                        System.out.println("No enemies in this rooom");
                     }
                     break;
                 case "help", "h":
@@ -95,6 +127,11 @@ public class UI {
                         System.out.println("Items in this room:\n" + adventure.getCurrentRoomItems());
                     } else {
                         System.out.println("No items in this room");
+                    }
+                    if (!adventure.currentRoom().printEnemy().isEmpty()){
+                        System.out.println("Enemies in this room: \n" + adventure.getCurrentRoomEnemies());
+                    } else {
+                        System.out.println("No enemies in this room");
                     }
                     break;
                 case "take", "t":
@@ -137,7 +174,10 @@ public class UI {
                     System.out.println(adventure.handleSwap(itemName));
                     break;
                 case "attack":
-                    System.out.println(adventure.handleAttack());
+                    System.out.println(adventure.handleAttack(enemyName));
+                    if (playerOne.getHealthBar() <= 0){
+                        System.exit(0);
+                    }
                     break;
                 case "exit":
                     System.out.println("Game ended\n" + "Thanks for playing " + adventure.getPlayerName() + "!");

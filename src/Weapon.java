@@ -6,7 +6,7 @@ public abstract class Weapon extends Item {
         this.damage = damage;
     }
 
-    abstract String attack();
+    abstract String attack(Enemy enemyName);
 
     abstract int ammoLeft();
 

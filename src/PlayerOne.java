@@ -13,7 +13,6 @@ public class PlayerOne {
     }
 
 
-
     public ArrayList<Item> getInventory() {
         return inventory;
     }
@@ -98,8 +97,12 @@ public class PlayerOne {
     }
 
     public void decreaseHealth(int decrease) {
-        healthBar = healthBar + decrease;
+        healthBar = healthBar - decrease;
+        if (healthBar <= 0) {
+
+        }
     }
+
 
     public String eat(String foodName) {
         Item itemToEat = denMørkeSkov.getCurrentRoom().findItem(foodName);
@@ -144,10 +147,8 @@ public class PlayerOne {
     }
 
     public String swap(String itemName) {
-        String oldItem = "";
         Item itemToSwap = findItemInInventory(itemName);
         Item itemEquipped = equipped.getFirst();
-        //Item itemEquipped = findItemInEquipped(oldItem);
         if (equipped.isEmpty()) {
             return "Sorry, cannot swap with a empty slot";
         }
@@ -164,14 +165,13 @@ public class PlayerOne {
         return "Sorry, item cannot be swapped";
     }
 
-    public String attack() {
-        if (equipped.isEmpty()) {
-            return "You need to equip an item to attack";
+    public String attack(String enemyName) {
+            Weapon weaponEquipped = (Weapon) equipped.getFirst();
+            Enemy enemyToAttack = denMørkeSkov.getCurrentRoom().findEnemy(enemyName);
+            return weaponEquipped.attack(enemyToAttack);
         }
-        Weapon weaponEquipped = (Weapon) equipped.getFirst();
-        return weaponEquipped.attack();
     }
-}
+
 
 
 

@@ -5,8 +5,12 @@ public class MeleeWeapon extends Weapon {
     }
 
     @Override
-    String attack() {
-        return "Attacking! " + swordEmoji + "\nYou dealt: " + damage + " damage with your " + shortName;
+    String attack(Enemy enemyName) {
+        String print;
+        enemyName.takeDamage(damage);
+        print = "Attacking with your " + shortName + swordEmoji + "\nYou dealt: " + damage + " damage to " + enemyName.getName();
+
+        return print;
     }
 
     @Override

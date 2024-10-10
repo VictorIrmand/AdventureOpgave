@@ -7,6 +7,7 @@ public class Room {
     private String forbindelser;
     private Room modeast, modsouth, modnorth, modwest;
     private ArrayList<Item> items = new ArrayList<>();
+    private ArrayList<Enemy> enemies = new ArrayList<>();
 
 
     public String getNavn() {
@@ -63,6 +64,22 @@ public class Room {
         return items;
     }
 
+    //Enemies
+    public ArrayList<Enemy> getEnemies(){
+        return enemies;
+    }
+    public Enemy addEnemy(Enemy i){
+        enemies.add(i);
+        return i;
+    }
+    public String printEnemy(){
+        String enemyList = "";
+        for (Enemy r : enemies){
+            enemyList = enemyList + r.getName() + " - " + r.getBeskrivelse() + ", Health: " + r.getHealth() + "\n";
+        }
+        return enemyList;
+    }
+
     //Adder items til room
     public Item addItems(Item i) {
         items.add(i);
@@ -88,6 +105,15 @@ public class Room {
         }
         return null;
     }
+    public Enemy removeEnemy(String name) {
+        for (Enemy r : enemies) {
+            if (r.getName().equalsIgnoreCase(name)) {
+                enemies.remove(r);
+                return r;
+            }
+        }
+        return null;
+    }
 
     public void removeItem(Item item) {
         items.remove(item);
@@ -98,6 +124,15 @@ public class Room {
         for (Item item : items) {
             if (item.getShortName().equalsIgnoreCase(name)) {
                 return item;
+            }
+        }
+        return null;
+    }
+
+    public Enemy findEnemy(String name){
+        for (Enemy enemy : enemies){
+            if (enemy.getName().equalsIgnoreCase(name)){
+                return enemy;
             }
         }
         return null;

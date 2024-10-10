@@ -7,6 +7,7 @@ public class Adventure {
     DenMørkeSkov denMørkeSkov;
     UI ui;
     Food food;
+    Enemy enemy;
 
 
     public Adventure() {
@@ -14,6 +15,7 @@ public class Adventure {
         denMørkeSkov.buildMap();
         playerOne = new PlayerOne(denMørkeSkov);
         food = new Food();
+        enemy = new Enemy();
         ui = new UI(denMørkeSkov, playerOne, this);
 
     }
@@ -105,6 +107,17 @@ public class Adventure {
         return playerOne.getHealthBar();
     }
 
+    public String getEnemyDescription() {
+        return enemy.getName() + enemy.getBeskrivelse() + enemy.getHealth();
+    }
+
+    public String getCurrentRoomEnemies() {
+        String print;
+        print = denMørkeSkov.getCurrentRoom().printEnemy();
+        return print;
+    }
+
+
     public boolean handleTake(String itemName) {
         if (itemName != null && !itemName.isEmpty()) {
             Item itemToTake = currentRoom().findItem(itemName);
@@ -137,56 +150,61 @@ public class Adventure {
     }
 
     public String handleEat(String foodName) {
-       return playerOne.eat(foodName);
-    }
-       /* Item itemToEat = denMørkeSkov.getCurrentRoom().findItem(foodName);
-        if (itemToEat == null) {
-            itemToEat = playerOne.findItemInInventory(foodName);
-        }
-        if (itemToEat instanceof Food) {
-            Food food = (Food) itemToEat;
-
-            FoodStatus status = playerOne.eat(foodName);
-            switch (status) {
-                case GOOD:
-                    return "You ate " + foodName + "!" + " You gained " + food.getHealthPoint() + " healthpoints";
-
-                case BAD:
-                    return "Not good, you just lost health!" + " Current health " + playerOne.getHealthBar() + " healthpoints";
-
-                case NOT_FOOD:
-                    return "You cannot eat that!";
-
-                case NOT_HERE:
-                    return foodName + " is not in this room or your inventory";
-
-                default:
-                    return "Unknown command, please try again!";
-            }
-
-        } else {
-            return "The item is not food";
-        }
-
+        return playerOne.eat(foodName);
     }
 
-        */
+    public String handleEquip(String itemName) {
+        return playerOne.equip(itemName);
+    }
 
+    public String handleSwap(String itemName) {
+        return playerOne.swap(itemName);
+    }
 
-            public String handleEquip (String itemName){
-                return playerOne.equip(itemName);
+    public String handleAttack(String enemyName) {
+        if (playerOne.getEquipped().isEmpty()) {
+            return "You need to equip an item to attack";
+        }
 
+        String exitMessage = "";
+        Enemy enemyFound = denMørkeSkov.getCurrentRoom().findEnemy(enemyName);
+        if (enemyFound == null){
+            enemyFound = denMørkeSkov.getCurrentRoom().getEnemies().getFirst();
+        }
+        enemyName = enemyFound.getName();
+        if (enemyFound != null) {
+            exitMessage = exitMessage + playerOne.attack(enemyName);
+            if (enemyFound.getHealth() <= 0) {
+                enemyFound.dropLoot();
+                denMørkeSkov.getCurrentRoom().removeEnemy(enemyName);
+                if (enemyName.equals("Drakthor the Devourer")){
+                    exitMessage = exitMessage + enemyName + " is dead!" + "\nCongratulations, brave adventurer!\n" +
+                            "\n" +
+                            "You have defeated Drakthor, the Devourer, and restored peace to the dark forest. The skies clear, and the land begins to heal.\nYour name will be remembered as the hero who saved the woods. Thank you for your courage!";
+                    endGame();
+                    return exitMessage;
+
+                }
+                exitMessage = exitMessage + "\nCongrats, " + enemyName + " is dead. His items is now usable. Can be locate in the room";
+
+            } else {
+                exitMessage = exitMessage + "\n" + enemyName + "Health: " + enemyFound.getHealth();
+                playerOne.decreaseHealth(enemyFound.getDamage());
+                exitMessage = exitMessage + "\n" + enemyName + " hit you with his " + enemyFound.getWeaponName() + " for " + enemyFound.getDamage();
+                if (playerOne.getHealthBar() <= 0) {
+                    exitMessage = exitMessage + "\n" + enemyName + "'s attack was to powerfull... your are dead.";
+                }
             }
 
-            public String handleSwap (String itemName){
-                return playerOne.swap(itemName);
-            }
-
-            public String handleAttack () {
-                return playerOne.attack();
-            }
+            return exitMessage;
 
         }
+        return "No enemies here to fight!";
+    }
+public void endGame(){
+        System.exit(0);
+}
+}
 
 
 
