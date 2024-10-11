@@ -40,9 +40,6 @@ public class Adventure {
         denMørkeSkov.setCurrentRoom(room);
     }
 
-    public String getItemDescription() {
-        return currentRoom().printItems();
-    }
 
     public String getCurrentRoomDescription() {
         return currentRoom().getNavn() + " " + currentRoom().getBeskrivelse() + " " + currentRoom().getForbindelser();
@@ -168,7 +165,7 @@ public class Adventure {
 
         String exitMessage = "";
         Enemy enemyFound = denMørkeSkov.getCurrentRoom().findEnemy(enemyName);
-        if (enemyFound == null){
+        if (enemyFound == null) {
             enemyFound = denMørkeSkov.getCurrentRoom().getEnemies().getFirst();
         }
         enemyName = enemyFound.getName();
@@ -177,11 +174,10 @@ public class Adventure {
             if (enemyFound.getHealth() <= 0) {
                 enemyFound.dropLoot();
                 denMørkeSkov.getCurrentRoom().removeEnemy(enemyName);
-                if (enemyName.equals("Drakthor the Devourer")){
+                if (enemyName.equals("Drakthor")) {
                     exitMessage = exitMessage + enemyName + " is dead!" + "\nCongratulations, brave adventurer!\n" +
                             "\n" +
                             "You have defeated Drakthor, the Devourer, and restored peace to the dark forest. The skies clear, and the land begins to heal.\nYour name will be remembered as the hero who saved the woods. Thank you for your courage!";
-                    endGame();
                     return exitMessage;
 
                 }
@@ -201,9 +197,10 @@ public class Adventure {
         }
         return "No enemies here to fight!";
     }
-public void endGame(){
+
+    public void endGame() {
         System.exit(0);
-}
+    }
 }
 
 

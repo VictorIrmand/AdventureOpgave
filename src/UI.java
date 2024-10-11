@@ -18,7 +18,7 @@ public class UI {
         denMørkeSkov.buildMap();
         System.out.println("Welcome to Adventure!");
         System.out.println("You have following options and commands");
-        System.out.println("You can move North, East, West or South. To move type 'go' followed by one of the 4 compass directions");
+        System.out.println("You can move North, East, West or South. To move type one of the 4 compass directions");
         System.out.println("Type - 'take', followed by the 'item name' to add a item to your inventory");
         System.out.println("Type - 'drop', followed by the 'item name' to drop a item from your inventory");
         System.out.println("Type - 'invetory, inv or i' to see your inventory");
@@ -51,7 +51,6 @@ public class UI {
 
 
         System.out.println("Welcome " + adventure.getPlayerName());
-        System.out.println("Start health: " + adventure.getHealthBar());
         System.out.println("You are at " + adventure.getCurrentRoomDescription());
 
         while (!binput.equalsIgnoreCase("exit")) {
@@ -176,7 +175,11 @@ public class UI {
                 case "attack":
                     System.out.println(adventure.handleAttack(enemyName));
                     if (playerOne.getHealthBar() <= 0){
-                        System.exit(0);
+                        adventure.endGame();
+                    }
+                    if(adventure.enemy.equals("Drakthor")){
+                        adventure.endGame();
+
                     }
                     break;
                 case "exit":

@@ -8,7 +8,7 @@ public class DenMørkeSkov {
         Room room1 = new Room("", "The starting point of your journey. The air is thick with tension as you step into the Dark Forest.\nThe trees tower above, and a strange silence surrounds you. There are no enemies here, but the ominous atmosphere warns of the dangers that lie ahead.,", "2 doors");
 
         //Weapons
-        Weapon sword = new MeleeWeapon("sword", "Made out of valyrian steel - damage 20", 20, "\u2694\uFE0F");
+        Weapon sword = new MeleeWeapon("sword", "Made out of valyrian steel - damage 20", 200, "\u2694\uFE0F");
         room1.addItems(sword);
 
         //Food
